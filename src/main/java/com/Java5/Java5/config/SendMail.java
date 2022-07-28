@@ -26,9 +26,9 @@ public class SendMail {
 
      public static void sendEmail(String toMail,String subject1,String body1) throws MessagingException, UnsupportedEncodingException {
 
-        final String fromEmail = "quylxpk01793fpt.edu.vn";
+        final String fromEmail = "quylxpk01793@fpt.edu.vn";
         // Mat khai email cua ban
-        final String password = "Acclone@734";
+        final String password = "aCCLONE@734";
         // dia chi email nguoi nhan
         final String toEmail = toMail;
 

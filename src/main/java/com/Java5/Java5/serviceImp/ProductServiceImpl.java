@@ -6,8 +6,14 @@
 package com.Java5.Java5.serviceImp;
 
 import com.Java5.Java5.domain.Product;
+import com.Java5.Java5.dto.ProductDTO;
 import com.Java5.Java5.repository.ProductRepository;
 import com.Java5.Java5.service.ProductService;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +27,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Autowired
     ProductRepository productRepository;
 
+    // public List<Product> listAll(String keyword) {
+    //     if (keyword != null) {
+    //         return productRepository.search(keyword);
+    //     }
+    //     return productRepository.findAll();
+    // }
     public <S extends Product> List<S> findAll(Example<S> example) {
 
         return productRepository.findAll(example);
@@ -41,7 +54,26 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(entity);
     }
 
-  
+    public List<ProductDTO> search(String name) {
+        Connection conn = DBProvider.getConnection();
+        List<ProductDTO> ListCat = new ArrayList<ProductDTO>();
+        try {
+            String sql = "SELECT * FROM product where name like  ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, name);
 
-    
+            ResultSet rst = pst.executeQuery();
+            while (rst.next()) {
+                ProductDTO posts = new ProductDTO(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getString(4),
+                        rst.getDouble(5), rst.getLong(6));
+                ListCat.add(posts);
+            }
+            return ListCat;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

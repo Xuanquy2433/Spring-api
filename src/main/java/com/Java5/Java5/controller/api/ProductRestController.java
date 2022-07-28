@@ -55,7 +55,7 @@ public class ProductRestController {
     public ResponseEntity<List<Product>> getAll(@Valid @RequestBody ProductDTO dto) {
         Product product = new Product();
 
-//        BeanUtils.copyProperties(dto, product);
+        // BeanUtils.copyProperties(dto, product);
         Example<Product> example = Example.of(product);
         Category category = new Category();
         if (dto.getCategoryId() != null) {
@@ -70,7 +70,7 @@ public class ProductRestController {
 
     @PostMapping("")
     public ResponseEntity<String> create(@Valid @RequestBody ProductDTO productDTO) throws ParseException {
-//        product.setCategory(category);
+        // product.setCategory(category);
         System.out.println(productDTO);
         Product product = new Product();
 
@@ -91,6 +91,16 @@ public class ProductRestController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+
+    // @GetMapping("search/{name}")
+    // public ResponseEntity<Product> search(@PathVariable("name") String  name) {
+    //     Optional<Product> currentData = roleService.search(name);
+    //     if (currentData.isPresent()) {
+    //         return new ResponseEntity<Product>(currentData.get(), HttpStatus.OK);
+    //     }
+    //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    // }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> delete(@PathVariable("id") Long id) {

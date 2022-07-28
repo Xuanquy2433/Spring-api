@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 public class AccountDTO {
-     private Long id;
-  
+    private Long id;
+
     private String username;
 
     @Size(min = 3, max = 200)
@@ -34,9 +34,6 @@ public class AccountDTO {
     private String email;
 
     private String name;
-
-
-
 
     private String role;
 

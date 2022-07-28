@@ -30,7 +30,7 @@ public class ProductDTO {
 
     private String name;
 
-    private String desription;
+    private String descriptions;
  
     private String image;
 

@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.Java5.Java5.service.AccountService;
 import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,6 +52,9 @@ public class AccountRestController {
 
     @Autowired
     AccountService accountService;
+
+    @Autowired
+    private HttpSession session;
 
     @GetMapping("")
     public ResponseEntity<List<Account>> getAll() {
@@ -79,9 +84,31 @@ public class AccountRestController {
         account.setPassword(PasswordHelper.encrypt(dto.getPassword()));
 
         this.accountService.save(account);
-        if (account.getId() == null) {
-            SendMail.sendEmail(account.getEmail(), "Đăng kí thành công", "Bạn đã tạo thành công tài khoản ");
+        // if (account.getId() == null) {
+        SendMail.sendEmail(account.getEmail(), "Sign up success",
+                " Hi, " + dto.getName() + " You have successfully created an account ");
+        // }
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @PostMapping("admin")
+    public ResponseEntity<String> createAdmin(@Valid @RequestBody AccountDTO dto)
+            throws MessagingException, UnsupportedEncodingException {
+
+        Account account = new Account();
+        BeanUtils.copyProperties(dto, account);
+        if (dto.getId() == null) {
+            Optional<Account> findUserName = accountService.findByUserName(account.getEmail());
+            System.out.println(findUserName.isEmpty());
+            if (findUserName.isEmpty() == false) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
+        account.setId(dto.getId());
+        account.setPassword(PasswordHelper.encrypt(dto.getPassword()));
+
+        this.accountService.save(account);
 
         return ResponseEntity.ok("Success");
     }
@@ -95,10 +122,11 @@ public class AccountRestController {
         System.out.println(example);
         Optional<Account> currentData = accountService.findOnewhere(example);
         if (currentData.isPresent()) {
+            session.setAttribute("username", "authen");
             currentData.get().setPassword("");
             return new ResponseEntity<Account>(currentData.get(), HttpStatus.OK);
         }
-
+        session.removeAttribute("username");
         // return accountService.findAllwhere(example);
         // return ResponseEntity.ok("Success");
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

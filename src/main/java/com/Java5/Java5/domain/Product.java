@@ -46,7 +46,7 @@ public class Product implements Serializable  {
 
    
     @Column(length = 1000, nullable = false)
-    private String desription;
+    private String descriptions;
 
     @Column(length = 1000, nullable = false)
     private String image;

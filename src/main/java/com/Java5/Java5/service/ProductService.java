@@ -7,6 +7,7 @@ package com.Java5.Java5.service;
 
 import com.Java5.Java5.domain.Category;
 import com.Java5.Java5.domain.Product;
+import com.Java5.Java5.dto.ProductDTO;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Example;
@@ -21,11 +22,14 @@ public interface ProductService {
 
     void delete(Product entity);
 
-   <S extends Product> List<S> findAll(Example<S> example);
+    <S extends Product> List<S> findAll(Example<S> example);
 
     Optional<Product> findById(Long id);
 
     <S extends Product> S save(S entity);
 
-    
+    // List<Product> listAll(String keyword);
+
+    List<ProductDTO> search(String name);
+
 }
