@@ -25,6 +25,14 @@ import org.springframework.data.domain.Example;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     AccountRepository accountRepository;
+    
+     public Account checkLogin(String username, String password) {
+        return accountRepository.checkLogin(username, password);
+    }
+
+    public Account checkUsername(String username, String email) {
+        return accountRepository.checkUsername(username, email);
+    }
 
     public List<Account> findAll() {
         return accountRepository.findAll();

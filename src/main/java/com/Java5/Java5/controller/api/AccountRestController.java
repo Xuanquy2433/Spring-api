@@ -9,6 +9,8 @@ import com.Java5.Java5.config.PasswordHelper;
 import com.Java5.Java5.config.SendMail;
 import com.Java5.Java5.domain.Account;
 import com.Java5.Java5.dto.AccountDTO;
+import com.Java5.Java5.dto.AccountForgotDTO;
+import com.Java5.Java5.dto.LoginDTO;
 import com.Java5.Java5.service.AccountService;
 
 import java.util.HashMap;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import com.Java5.Java5.service.AccountService;
+import com.Java5.Java5.utils.JwtHelper;
 import java.io.UnsupportedEncodingException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpSession;
@@ -55,6 +58,8 @@ public class AccountRestController {
 
     @Autowired
     private HttpSession session;
+
+    JwtHelper JwtHelper;
 
     @GetMapping("")
     public ResponseEntity<List<Account>> getAll() {
@@ -133,19 +138,19 @@ public class AccountRestController {
     }
 
     @PostMapping("forgot-password")
-    public ResponseEntity<Boolean> forgotPassword(@Valid @RequestBody AccountDTO dto)
+    public ResponseEntity<Boolean> forgotPassword(@Valid @RequestBody AccountForgotDTO dto)
             throws MessagingException, UnsupportedEncodingException {
         Account account = new Account();
         BeanUtils.copyProperties(dto, account);
 
-        Optional<Account> findUserName = accountService.findByUserName(account.getEmail());
-        if (findUserName.isEmpty() == false) {
+        Account findUserName = accountService.checkUsername(dto.getUsername(), dto.getEmail());
+        if (findUserName != null) {
             SendMail.sendEmail(account.getEmail(), "Forgot password",
-                    " Mật khẩu của bạn là  " + PasswordHelper.decrypt(findUserName.get().getPassword()));
+                    "Hi, " + dto.getUsername() + " your password is: "
+                            + PasswordHelper.decrypt(findUserName.getPassword()));
 
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         }
 
         return new ResponseEntity<>(HttpStatus.OK);

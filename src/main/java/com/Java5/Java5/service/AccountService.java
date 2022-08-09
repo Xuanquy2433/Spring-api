@@ -19,19 +19,22 @@ import org.springframework.stereotype.Service;
 @Service
 public interface AccountService {
 
+    Account checkLogin(String username, String password);
+
+    Account checkUsername(String username, String email);
+
     void delete(Account entity);
 
     List<Account> findAll();
 
     Optional<Account> findById(Long id);
-    
+
     Optional<Account> findByUserName(String userName);
 
     <S extends Account> S save(S entity);
-    
+
     <S extends Account> List<S> findAllwhere(Example<S> example);
-    
-    
-     <S extends Account>  Optional<S> findOnewhere(Example<S> example);
-     
+
+    <S extends Account> Optional<S> findOnewhere(Example<S> example);
+
 }

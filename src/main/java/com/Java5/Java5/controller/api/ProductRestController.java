@@ -35,6 +35,7 @@ import java.util.Date;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -51,7 +52,10 @@ public class ProductRestController {
     @Autowired
     ProductService roleService;
 
-    @PostMapping("filter")
+    @Autowired
+    ProductService productService;
+
+    @PostMapping("list")
     public ResponseEntity<List<Product>> getAll(@Valid @RequestBody ProductDTO dto) {
         Product product = new Product();
 
@@ -65,7 +69,7 @@ public class ProductRestController {
         }
         System.out.println(example);
 
-        return new ResponseEntity<>(roleService.findAll(example), HttpStatus.OK);
+        return new ResponseEntity<>(productService.findAll(example), HttpStatus.OK);
     }
 
     @PostMapping("")
@@ -78,20 +82,19 @@ public class ProductRestController {
         Category cat = new Category();
         cat.setId(productDTO.getCategoryId());
         product.setCategory(cat);
-        roleService.save(product);
+        productService.save(product);
 
         return ResponseEntity.ok("Success");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> detail(@PathVariable("id") Long id) {
-        Optional<Product> currentData = roleService.findById(id);
+        Optional<Product> currentData = productService.findById(id);
         if (currentData.isPresent()) {
             return new ResponseEntity<Product>(currentData.get(), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
 
     // @GetMapping("search/{name}")
     // public ResponseEntity<Product> search(@PathVariable("name") String  name) {
@@ -102,11 +105,23 @@ public class ProductRestController {
     //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     // }
 
+
+
+    @GetMapping("search/{name}")
+    public ResponseEntity<List<Product>> searchProducts(@PathVariable("name") String name) {
+        return ResponseEntity.ok(productService.searchProducts(name));
+    }
+    
+     @GetMapping("listProductCategory/{categoryId}")
+    public ResponseEntity<List<Product>> getlistProductCate(@PathVariable("categoryId") Long categoryId) {
+        return ResponseEntity.ok(productService.listProductCategory(categoryId));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Product> delete(@PathVariable("id") Long id) {
-        Optional<Product> currentData = roleService.findById(id);
+        Optional<Product> currentData = productService.findById(id);
         if (currentData.isPresent()) {
-            roleService.delete(currentData.get());
+            productService.delete(currentData.get());
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -11,14 +11,21 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
  * @author Xuan Quy
  */
 public interface AccountRepository extends JpaRepository<Account, Long> {
-  @Query(value = "SELECT * FROM `accounts` WHERE email= ?1",nativeQuery = true)
+
+    @Query(value = "SELECT * FROM `accounts` WHERE email= ?1", nativeQuery = true)
     Optional<Account> findByUserName(String userName);
-    
-   
+
+    @Query("SELECT a FROM Account a WHERE a.username = :username and a.password = :password ")
+    public Account checkLogin(@Param("username") String username, @Param("password") String password);
+
+    @Query("SELECT a FROM Account a WHERE a.username = :username and a.email = :email ")
+    public Account checkUsername(@Param("username") String username, @Param("email") String password);
+
 }

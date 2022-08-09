@@ -28,8 +28,9 @@ public interface ProductService {
 
     <S extends Product> S save(S entity);
 
-    // List<Product> listAll(String keyword);
+    // List<ProductDTO> search(String name);
+    List<Product> searchProducts(String name);
 
-    List<ProductDTO> search(String name);
+    List<Product> listProductCategory(Long categoryId);
 
 }
