@@ -28,7 +28,7 @@ public class SendMail {
 
         final String fromEmail = "quylxpk01793@fpt.edu.vn";
         // Mat khai email cua ban
-        final String password = "aCCLONE@734";
+        final String password = "voafofnqebxvvabx";
         // dia chi email nguoi nhan
         final String toEmail = toMail;
 
